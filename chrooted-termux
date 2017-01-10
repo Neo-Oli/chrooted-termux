@@ -28,23 +28,18 @@ if [ "$first" != 1 ];then
         comment "making files in $f executable"
         chmod -R 700 $f/*
     done
-    #comment "fixing nameserver, otherwise it can't connect to the internet"
-    #echo "nameserver 8.8.8.8" > $folder/etc/resolv.conf
     mkdir $folder/home
 fi
 ff=/data/data/com.termux/files
 bin=$PREFIX/bin/starttermux
 comment "writing launch script"
 command="proot"
-#command+=" --link2symlink"
-#command+=" -0"
 command+=" -r $HOME/termux"
 command+=" -b /system"
 command+=" -b /dev/"
 command+=" -b /sys/"
 command+=" -b /etc/"
 command+=" -b /proc/"
-command+=" -b /data/data/com.termux/files/home/drive"
 command+=" -w /data/data/com.termux/files/home/"
 
 command+=" $ff/usr/bin/env -i"
