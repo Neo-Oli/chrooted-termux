@@ -1,47 +1,45 @@
 #!/data/data/com.termux/files/usr/bin/bash
-function comment(){
-    echo -en "\e[45m"
-    echo -n $@
-    echo -e "\e[0m"
-}
-folder=$HOME/termux/data/data/com.termux/files
+folder=termux-fs/data/data/com.termux/files
 if [ -d "$folder" ]; then
     first=1
-    comment "skipping downloading"
+    echo "skipping downloading"
 fi
 if [ "$first" != 1 ];then
     if [ ! -f "bootstrap.zip" ]; then
-        comment "downloading bootstrap package"
+        echo "downloading bootstrap package"
         wget https://termux.net/bootstrap/bootstrap-`dpkg --print-architecture`.zip -O bootstrap.zip
     fi
     cur=`pwd`
     mkdir -p $folder/usr
     cd $folder/usr
-    comment "decompressing bootstrap image image"
+    echo "decompressing bootstrap image image"
     unzip $cur/bootstrap.zip
     while read p; do
-        comment "creating symlink for $p"
+        echo "creating symlink for $p"
         ln -s ${p/←/ }
     done <SYMLINKS.txt
     rm SYMLINKS.txt
     for f in bin libexec lib/apt/methods;do
-        comment "making files in $f executable"
+        echo "making files in $f executable"
         chmod -R 700 $f/*
     done
-    mkdir $folder/home
+    cd $cur
+    mkdir -p $folder/home
 fi
 ff=/data/data/com.termux/files
-bin=$PREFIX/bin/starttermux
-comment "writing launch script"
+bin=starttermux.sh
+echo "writing launch script"
+
+cat > $bin <<- EOM
+#!/bin/bash
 command="proot"
-command+=" -r $HOME/termux"
+command+=" -r termux-fs"
 command+=" -b /system"
 command+=" -b /dev/"
 command+=" -b /sys/"
 command+=" -b /etc/"
 command+=" -b /proc/"
 command+=" -w /data/data/com.termux/files/home/"
-
 command+=" $ff/usr/bin/env -i"
 command+=" HOME=$ff/home"
 command+=" PATH=$ff/usr/bin:$ff/usr/bin/applets"
@@ -52,8 +50,6 @@ command+=" EXTERNAL_STORAGE=/sdcard"
 command+=" LANG=\$LANG"
 command+=" LD_LIBRARY_PATH=/data/data/com.termux/files/usr/lib"
 command+=" PREFIX=/data/data/com.termux/files/usr"
-cat > $bin <<- EOM
-#!/bin/bash
 export PROOT_NO_SECCOMP=1
 com="\$@"
 if [ -L "$folder/home/.termux/shell" ];then
@@ -64,12 +60,12 @@ else
     shellname=bash
 fi
 if [ -z "\$1" ];then
-    exec $command bash -c "exec -a -\$shellname \$shell"
+    exec \$command bash -c "exec -a -\$shellname \$shell"
 else
-    $command sh -c "\$com"
+    \$command sh -c "\$com"
 fi
 EOM
-comment "fixing shebang of $bin"
+echo "fixing shebang of $bin"
 termux-fix-shebang $bin
-comment "making $bin executable"
+echo "making $bin executable"
 chmod +x $bin
