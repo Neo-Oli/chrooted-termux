@@ -32,6 +32,7 @@ echo "writing launch script"
 
 cat > $bin <<- EOM
 #!/bin/bash
+cd \`dirname \$0\`
 command="proot"
 command+=" -r termux-fs"
 command+=" -b /system"
@@ -50,7 +51,6 @@ command+=" EXTERNAL_STORAGE=/sdcard"
 command+=" LANG=\$LANG"
 command+=" LD_LIBRARY_PATH=/data/data/com.termux/files/usr/lib"
 command+=" PREFIX=/data/data/com.termux/files/usr"
-export PROOT_NO_SECCOMP=1
 com="\$@"
 if [ -L "$folder/home/.termux/shell" ];then
     shell=$ff/home/.termux/shell
