@@ -32,7 +32,7 @@ echo "writing launch script"
 
 cat > $bin <<- EOM
 #!/bin/bash
-cd `pwd`
+cd \$(dirname \$0)
 command="proot"
 command+=" -r termux-fs"
 command+=" -b /system"
