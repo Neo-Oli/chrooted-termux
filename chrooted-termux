@@ -41,9 +41,11 @@ command+=" -b /dev/"
 command+=" -b /sys/"
 command+=" -b /etc/"
 command+=" -b /proc/"
-for f in binds/* ;do
-    . \$f
-done 2>/dev/null
+if [ -n "\$(ls -A binds)" ]; then
+    for f in binds/* ;do
+        . \$f
+    done
+fi
 command+=" -w /data/data/com.termux/files/home/"
 command+=" $ff/usr/bin/env -i"
 command+=" HOME=$ff/home"
