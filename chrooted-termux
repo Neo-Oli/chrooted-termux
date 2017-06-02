@@ -1,4 +1,5 @@
 #!/data/data/com.termux/files/usr/bin/bash
+mkdir -p binds
 folder=termux-fs/data/data/com.termux/files
 if [ -d "$folder" ]; then
     first=1
@@ -27,7 +28,7 @@ if [ "$first" != 1 ];then
     mkdir -p $folder/home
 fi
 ff=/data/data/com.termux/files
-bin=starttermux.sh
+bin=start.sh
 echo "writing launch script"
 
 cat > $bin <<- EOM
@@ -40,6 +41,9 @@ command+=" -b /dev/"
 command+=" -b /sys/"
 command+=" -b /etc/"
 command+=" -b /proc/"
+for f in binds/* ;do
+    . \$f
+done 2>/dev/null
 command+=" -w /data/data/com.termux/files/home/"
 command+=" $ff/usr/bin/env -i"
 command+=" HOME=$ff/home"
@@ -51,6 +55,7 @@ command+=" EXTERNAL_STORAGE=/sdcard"
 command+=" LANG=\$LANG"
 command+=" LD_LIBRARY_PATH=/data/data/com.termux/files/usr/lib"
 command+=" PREFIX=/data/data/com.termux/files/usr"
+command+=" TMPDIR=/data/data/com.termux/files/usr/tmp"
 com="\$@"
 if [ -L "$folder/home/.termux/shell" ];then
     shell=$ff/home/.termux/shell
@@ -62,7 +67,7 @@ fi
 if [ -z "\$1" ];then
     exec \$command bash -c "exec -a -\$shellname \$shell"
 else
-    \$command sh -c "\$com"
+    exec \$command sh -c "\$com"
 fi
 EOM
 echo "fixing shebang of $bin"
