@@ -1,4 +1,4 @@
-# termux-ubuntu
+# Run Termux in Termux
 
 A script to setup a chroot jail containing a seperate termux evironment on termux
 
