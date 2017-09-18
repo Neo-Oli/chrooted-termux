@@ -34,6 +34,10 @@ echo "writing launch script"
 cat > $bin <<- EOM
 #!/bin/bash
 cd \$(dirname \$0)
+
+#unset LD_PRELOAD in case termux-exec is installed. If termux-exec is also installed inside the jail it will set again.
+unset LD_PRELOAD
+
 command="proot"
 command+=" -r termux-fs"
 command+=" -b /system"
@@ -60,17 +64,10 @@ command+=" LD_LIBRARY_PATH=/data/data/com.termux/files/usr/lib"
 command+=" PREFIX=/data/data/com.termux/files/usr"
 command+=" TMPDIR=/data/data/com.termux/files/usr/tmp"
 com="\$@"
-if [ -L "$folder/home/.termux/shell" ];then
-    shell=$ff/home/.termux/shell
-    shellname=\`basename \$(readlink $folder/home/.termux/shell)\`
+if [ -z "\$com" ];then
+    exec \$command login
 else
-    shell=$ff/usr/bin/bash
-    shellname=bash
-fi
-if [ -z "\$1" ];then
-    exec \$command bash -c "exec -a -\$shellname \$shell"
-else
-    exec \$command sh -c "\$com"
+    exec \$command login -c "\$com"
 fi
 EOM
 echo "fixing shebang of $bin"
