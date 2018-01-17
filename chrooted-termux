@@ -26,6 +26,10 @@ if [ "$first" != 1 ];then
     done
     cd $cur
     mkdir -p $folder/home
+    echo "Setting permissions of root directory"
+    chmod -rw termux-fs
+    chmod -rw termux-fs/data
+    chmod -rw termux-fs/data/data/
 fi
 ff=/data/data/com.termux/files
 bin=start.sh
