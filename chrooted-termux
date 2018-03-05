@@ -49,6 +49,7 @@ command+=" -b /dev/"
 command+=" -b /sys/"
 command+=" -b /etc/"
 command+=" -b /proc/"
+command+=" -b /data/dalvik-cache/"
 command+=" -b /property_contexts"
 if [ -n "\$(ls -A binds)" ]; then
     for f in binds/* ;do
