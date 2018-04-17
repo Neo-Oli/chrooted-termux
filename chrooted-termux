@@ -70,9 +70,9 @@ command+=" PREFIX=/data/data/com.termux/files/usr"
 command+=" TMPDIR=/data/data/com.termux/files/usr/tmp"
 com="\$@"
 if [ -z "\$com" ];then
-    exec \$command login
+    eval "exec \$command login"
 else
-    exec \$command login -c "\$com"
+    eval "exec \$command login -c \"\$com\""
 fi
 EOM
 echo "fixing shebang of $bin"
