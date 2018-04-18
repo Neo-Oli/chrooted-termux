@@ -72,7 +72,7 @@ com="\$@"
 if [ -z "\$com" ];then
     eval "exec \$command login"
 else
-    eval "exec \$command login -c \"\$com\""
+    eval "exec \$command login -c '\$com'"
 fi
 EOM
 echo "fixing shebang of $bin"
