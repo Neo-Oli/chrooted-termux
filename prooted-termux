@@ -37,13 +37,13 @@ echo "writing launch script"
 
 cat > $bin <<- EOM
 #!/bin/bash
-cd \$(dirname \$0)
+basedir=\$(dirname \$0)
 
 #unset LD_PRELOAD in case termux-exec is installed. If termux-exec is also installed inside the jail it will set again.
 unset LD_PRELOAD
 
 command="proot"
-command+=" -r termux-fs"
+command+=" -r \$basedir/termux-fs"
 command+=" -b /system"
 command+=" -b /dev/"
 command+=" -b /sys/"
@@ -52,8 +52,8 @@ command+=" -b /proc/"
 command+=" -b /vendor"
 command+=" -b /data/dalvik-cache/"
 command+=" -b /property_contexts"
-if [ -n "\$(ls -A binds)" ]; then
-    for f in binds/* ;do
+if [ -n "\$(ls -A \$basedir/binds)" ]; then
+    for f in \$basedir/binds/* ;do
         . \$f
     done
 fi
