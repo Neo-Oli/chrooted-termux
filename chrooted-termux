@@ -51,7 +51,7 @@ export ff=data/data/com.termux/files
 export basedir=\$(dirname \$0)
 export j=\$basedir/termux-fs
 
-mounts="system dev etc proc vendor data/dalvik-cache"
+mounts="system dev etc proc vendor data/dalvik-cache sys"
 
 #unset LD_PRELOAD in case termux-exec is installed. If termux-exec is also installed inside the jail it will set again.
 unset LD_PRELOAD
@@ -70,7 +70,6 @@ groups=${user},inet,everybody,${user}_cache,all_$(echo $user|cut -d "_" -f 2)
 command="chroot --userspec=\$user:\$user --groups=\$groups \$j"
 command+=" /\$ff/usr/bin/env -i"
 command+=" HOME=/\$ff/home"
-command+=" PWD=/\$ff/home"
 command+=" PATH=/\$ff/usr/bin:/\$ff/usr/bin/applets"
 command+=" TERM=\$TERM"
 command+=" ANDROID_DATA=/data"
@@ -90,6 +89,7 @@ else
 fi
 eval "exec \$command sh -c \"\$execute\""
 EOM
+
 termux-fix-shebang $bin
 termux-fix-shebang $wrap
 chmod +x $bin $wrap
