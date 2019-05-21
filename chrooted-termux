@@ -8,7 +8,7 @@ fi
 if [ "$first" != 1 ];then
     if [ ! -f "bootstrap.zip" ]; then
         echo "downloading bootstrap package"
-        wget https://termux.net/bootstrap/bootstrap-`dpkg --print-architecture`.zip -O bootstrap.zip
+        wget https://termux.org/bootstrap-`dpkg --print-architecture`.zip -O bootstrap.zip
     fi
     cur=`pwd`
     mkdir -p $folder/usr
@@ -41,7 +41,7 @@ cat > $wrap <<- EOM
 #!/bin/bash
 export basedir=\$(dirname \$0)
     export  APPEND_SYSTEM_PATH=1
-    exec tsu -c "sh -c \"cd \\\\\\"$PWD\\\\\\";export TERM=\$TERM;exec unshare -mf \$basedir/chroot.sh \\\\\\"\$@\\\\\\"\""
+    exec $PREFIX/bin/tsu -c "sh -c \"cd \\\\\\"$PWD\\\\\\";export TERM=\$TERM;exec unshare -mf \$basedir/chroot.sh \\\\\\"\$@\\\\\\"\""
 EOM
 
 cat > $bin <<- EOM
